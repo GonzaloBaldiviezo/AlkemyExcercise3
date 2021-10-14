@@ -39,3 +39,99 @@ select * from profesor where fecha_nacimiento between "1980/1/1" and "1989/12/31
 select * from profesor limit 5;
 select * from profesor where apellido like 'P%';
 select * from profesor where (fecha_nacimiento between "1980/1/1" and "1989/12/31") and (salario > 80000);
+
+#Ejercicios Modulo 2
+CREATE TABLE estudiante (
+legajo INT NOT NULL,
+nombre VARCHAR(45) NOT NULL,
+apellido VARCHAR(45) NOT NULL,
+fecha_nacimiento DATE NOT NULL,
+carrera VARCHAR(45) NOT NULL,
+  PRIMARY KEY(legajo)
+);
+
+INSERT INTO estudiante VALUES(36485, "Romina", "Nieva", "1999-11-26", "Mecanica");
+INSERT INTO estudiante VALUES(39685, "Brenda", "Medrano", "2000-09-25", "Sistemas");
+INSERT INTO estudiante VALUES(41258, "Ramiro", "Rios", "1994-12-06", "Sistemas");
+INSERT INTO estudiante VALUES(43651, "Cristian", "Gomez", "1995-03-19", "Mecanica");
+INSERT INTO estudiante VALUES(47521, "Maria", "Velazquez", "1998-01-02", "Sistemas");
+INSERT INTO estudiante VALUES(47961, "Alexis", "Reinoso", "1994-12-17", "Sistemas");
+INSERT INTO estudiante VALUES(48952, "Gabriel", "Morales", "1996-10-03", "Sistemas");
+INSERT INTO estudiante VALUES(51200, "Lourdes", "Martinez", "2001-12-13", "Sistemas");
+
+#1. Escriba una consulta para saber cuantos estudiantes son de la carrera Mecanica
+SELECT COUNT(*) FROM estudiante WHERE carrera = "Mecanica";
+
+#Escriba una consulta para saber, de la tabla PROFESOR, el salario mínimo de los profesores nacidos en la década del 80.
+SELECT MIN(salario) from profesor where (fecha_nacimiento between "1980/1/1" and "1989/12/31");
+
+#Tablas pais-pasajero-pago
+CREATE TABLE pais (
+idpais INT NOT NULL,
+nombre VARCHAR(45) NOT NULL,
+  PRIMARY KEY(idpais)
+);
+
+INSERT INTO pais VALUES(01, "Argentina");
+INSERT INTO pais VALUES(02, "Brasil");
+INSERT INTO pais VALUES(03, "Uruguay");
+INSERT INTO pais VALUES(04, "Mexico");
+INSERT INTO pais VALUES(05, "Colombia");
+INSERT INTO pais VALUES(06, "Venezuela");
+
+CREATE TABLE pasajero (
+idpasajero INT NOT NULL,
+nombre VARCHAR(45) NOT NULL,
+apaterno VARCHAR(45) NOT NULL,
+amaterno VARCHAR(45) NOT NULL,
+tipo_documento VARCHAR(10) NOT NULL,
+nro_documento INT NOT NULL,
+fecha_nacimiento DATE NOT NULL,
+idpais INT NOT NULL,
+telefono INT NOT NULL,
+email VARCHAR(45) NOT NULL,
+clave VARCHAR(45) NOT NULL,
+  PRIMARY KEY(idpasajero),
+  FOREIGN KEY (idpais) REFERENCES pais(idpais)
+);
+
+INSERT INTO pasajero VALUES(101, "Juan", "Perez", "Rodriguez", "DNI", 33333333, "1999-01-01", 01, 123456789, "email@email.com", "1234");
+INSERT INTO pasajero VALUES(102, "Jose", "Perez", "Rodriguez", "DNI", 33333333, "1999-01-01", 02, 123456789, "email@email.com", "1234");
+INSERT INTO pasajero VALUES(103, "Pedro", "Perez", "Rodriguez", "DNI", 33333333, "1999-01-01", 01, 123456789, "email@email.com", "1234");
+INSERT INTO pasajero VALUES(104, "Pepe", "Perez", "Rodriguez", "DNI", 33333333, "1999-01-01", 03, 123456789, "email@email.com", "1234");
+INSERT INTO pasajero VALUES(105, "Luis", "Perez", "Rodriguez", "DNI", 33333333, "1999-01-01", 01, 123456789, "email@email.com", "1234");
+INSERT INTO pasajero VALUES(106, "Julio", "Perez", "Rodriguez", "DNI", 33333333, "1999-01-01", 04, 123456789, "email@email.com", "1234");
+INSERT INTO pasajero VALUES(107, "Alberto", "Perez", "Rodriguez", "DNI", 33333333, "1999-01-01", 03, 123456789, "email@email.com", "1234");
+INSERT INTO pasajero VALUES(108, "Daniel", "Perez", "Rodriguez", "DNI", 33333333, "1999-01-01", 05, 123456789, "email@email.com", "1234");
+INSERT INTO pasajero VALUES(109, "Juan", "Perez", "Rodriguez", "DNI", 33333333, "1999-01-01", 01, 123456789, "email@email.com", "1234");
+INSERT INTO pasajero VALUES(110, "Julian", "Perez", "Rodriguez", "DNI", 33333333, "1999-01-01", 02, 123456789, "email@email.com", "1234");
+
+CREATE TABLE pago (
+idpago INT NOT NULL,
+idreserva INT NOT NULL,
+fecha DATE NOT NULL,
+idpasajero INT NOT NULL,
+monto FLOAT NOT NULL,
+tipo_comprobante VARCHAR(10) NOT NULL,
+num_comprobante INT NOT NULL,
+impuesto FLOAT NOT NULL,
+  PRIMARY KEY(idpago),
+  FOREIGN KEY (idpasajero) REFERENCES pasajero(idpasajero)
+);
+
+INSERT INTO pago VALUES(2001, 1001, "2000-10-10", 101, 33.3333, "Ticket", 123123, 0.3333);
+INSERT INTO pago VALUES(2002, 1011, "2000-10-10", 105, 36.0000, "Ticket", 123123, 0.3600);
+INSERT INTO pago VALUES(2003, 1111, "2000-10-10", 102, 101.70, "Ticket", 123123, 1.0170);
+INSERT INTO pago VALUES(2004, 0111, "2000-10-10", 102, 150.00, "Ticket", 123123, 1.5000);
+
+#Cantidad de pasajeros por país
+SELECT p1.nombre, COUNT(*) FROM pais p1 JOIN pasajero p2 ON p2.idpais = p1.idpais GROUP BY p1.nombre;
+
+#Suma de todos los pagos realizados
+SELECT SUM(p.monto) FROM pago p;
+
+#Suma de todos los pagos que realizó un pasajero. El monto debe aparecer con dos decimales.
+SELECT p1.nombre, ROUND(SUM(p2.monto), 2) FROM pago p2 JOIN pasajero p1 ON p1.idpasajero = p2.idpasajero GROUP BY p1.nombre;
+
+#Promedio de los pagos que realizó un pasajero.
+SELECT p1.nombre, AVG(p2.monto) FROM pago p2 JOIN pasajero p1 ON p1.idpasajero = p2.idpasajero GROUP BY p1.nombre;
