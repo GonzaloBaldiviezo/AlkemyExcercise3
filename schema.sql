@@ -191,3 +191,32 @@ FROM curso c;
 
 #Cursos cuyo cupo disponible sea menor a 10
 SELECT * FROM curso c WHERE c.cupo < 10;
+
+#Indices
+
+#Crear una tabla persona sin primary key y solamente con dos campos: id y nombre
+
+CREATE TABLE indices (
+id INT NOT NULL,
+nombre VARCHAR(45) NOT NULL
+);
+
+#Inserte datos siguiendo un orden no secuencial para el id.
+
+INSERT INTO indices VALUES(12, "Juan");
+INSERT INTO indices VALUES(69, "Jose");
+INSERT INTO indices VALUES(65, "Pedro");
+INSERT INTO indices VALUES(91, "Pablo");
+INSERT INTO indices VALUES(33, "Luis");
+
+#Consulte los datos para visualizar el orden de registros.
+
+SELECT * FROM alkemy.indices;
+
+#Agregue una clave primaria para el campo id.
+
+ALTER TABLE indices ADD PRIMARY KEY (id);
+
+#Consulte los datos para visualizar el orden de registros.
+
+SELECT * FROM alkemy.indices;
