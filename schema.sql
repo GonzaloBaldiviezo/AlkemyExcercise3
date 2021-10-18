@@ -135,3 +135,59 @@ SELECT p1.nombre, ROUND(SUM(p2.monto), 2) FROM pago p2 JOIN pasajero p1 ON p1.id
 
 #Promedio de los pagos que realizó un pasajero.
 SELECT p1.nombre, AVG(p2.monto) FROM pago p2 JOIN pasajero p1 ON p1.idpasajero = p2.idpasajero GROUP BY p1.nombre;
+
+#Multiple Tables
+
+CREATE TABLE inscripcion (
+numero INT NOT NULL,
+CURSO_codigo INT NOT NULL,
+ESTUDIANTE_legajo INT NOT NULL,
+fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY(numero),
+FOREIGN KEY (CURSO_codigo) REFERENCES curso(codigo),
+FOREIGN KEY (ESTUDIANTE_legajo) REFERENCES estudiante(legajo)
+);
+
+INSERT INTO inscripcion VALUES(01, 101, 47521, DEFAULT);
+INSERT INTO inscripcion VALUES(02, 101, 41258, DEFAULT);
+INSERT INTO inscripcion VALUES(03, 102, 39685, DEFAULT);
+INSERT INTO inscripcion VALUES(04, 102, 43651, DEFAULT);
+INSERT INTO inscripcion VALUES(05, 103, 36485, DEFAULT);
+
+#Nombre, apellido y cursos que realiza cada estudiante
+SELECT e.nombre, e.apellido, c.nombre 
+FROM estudiante e 
+JOIN inscripcion i 
+ON i.ESTUDIANTE_legajo = e.legajo 
+JOIN curso c 
+ON c.codigo = i.CURSO_codigo;
+
+#Nombre, apellido y cursos que realiza cada estudiante, ordenados por el nombre del curso
+SELECT e.nombre, e.apellido, c.nombre 
+FROM estudiante e 
+JOIN inscripcion i 
+ON i.ESTUDIANTE_legajo = e.legajo 
+JOIN curso c 
+ON c.codigo = i.CURSO_codigo
+ORDER BY c.nombre;
+
+#Nombre, apellido y cursos que dicta cada profesor
+SELECT p.nombre, p.apellido, c.nombre 
+FROM profesor p 
+JOIN curso c 
+ON c.PROFESOR_ID = p.id;
+
+#Nombre, apellido y cursos que dicta cada profesor, ordenados por el nombre del curso
+SELECT p.nombre, p.apellido, c.nombre 
+FROM profesor p 
+JOIN curso c 
+ON c.PROFESOR_ID = p.id
+ORDER BY c.nombre;
+
+#Cupo disponible para cada curso (Si el cupo es de 35 estudiantes y hay 5 inscriptos, el cupo disponible será 30)- COUNT(e.legajo)
+SELECT c.nombre AS Curso, (c.cupo - (SELECT COUNT(*) FROM inscripcion i JOIN curso c 
+ON i.CURSO_codigo = c.codigo)) AS 'Cupo Disponible' 
+FROM curso c;
+
+#Cursos cuyo cupo disponible sea menor a 10
+SELECT * FROM curso c WHERE c.cupo < 10;
