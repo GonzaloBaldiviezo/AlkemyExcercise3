@@ -185,9 +185,9 @@ ON c.PROFESOR_ID = p.id
 ORDER BY c.nombre;
 
 #Cupo disponible para cada curso (Si el cupo es de 35 estudiantes y hay 5 inscriptos, el cupo disponible será 30)- COUNT(e.legajo)
-SELECT c.nombre AS Curso, (c.cupo - (SELECT COUNT(*) FROM inscripcion i JOIN curso c 
-ON i.CURSO_codigo = c.codigo)) AS 'Cupo Disponible' 
-FROM curso c;
+SELECT c.nombre AS Curso, (c.cupo - COUNT(i.CURSO_codigo)) AS 'Cupo Disponible' 
+FROM curso c JOIN inscripcion i ON c.codigo = i.CURSO_codigo
+GROUP BY i.CURSO_codigo;
 
 #Cursos cuyo cupo disponible sea menor a 10
 SELECT * FROM curso c WHERE c.cupo < 10;
