@@ -220,3 +220,22 @@ ALTER TABLE indices ADD PRIMARY KEY (id);
 #Consulte los datos para visualizar el orden de registros.
 
 SELECT * FROM alkemy.indices;
+
+#Queries Anidadas
+
+#Escriba una consulta que devuelva la cantidad de profesores que dictan más de un curso en el turno Noche.
+SELECT COUNT(c.PROFESOR_ID) AS 'Cant Profesores'
+FROM curso c 
+JOIN profesor p
+ON p.id = c.PROFESOR_ID 
+WHERE c.turno = "Noche"
+GROUP BY c.PROFESOR_ID
+HAVING COUNT(c.PROFESOR_ID) > 0;
+
+#Escriba una consulta para obtener la información de todos los estudiantes que no realizan el curso con código 105
+SELECT * FROM estudiante e 
+JOIN inscripcion i 
+ON e.legajo = i.ESTUDIANTE_legajo
+JOIN curso c
+ON c.codigo = i.CURSO_codigo
+WHERE i.CURSO_codigo != 105;
