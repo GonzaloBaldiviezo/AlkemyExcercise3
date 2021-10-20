@@ -239,3 +239,43 @@ ON e.legajo = i.ESTUDIANTE_legajo
 JOIN curso c
 ON c.codigo = i.CURSO_codigo
 WHERE i.CURSO_codigo != 105;
+
+
+#EJERCITACION FINAL
+
+#Escriba una consulta que devuelva el legajo y la cantidad de cursos que realiza cada estudiante.
+SELECT e.legajo AS Legajo, COUNT(i.CURSO_codigo) AS 'Cant Cursos'
+FROM estudiante e JOIN inscripcion i ON e.legajo = i.ESTUDIANTE_legajo
+GROUP BY i.CURSO_codigo;
+
+#Escriba una consulta que devuelva el legajo y la cantidad de cursos de los estudiantes que realizan más de un curso.
+SELECT e.legajo AS Legajo, COUNT(i.CURSO_codigo) AS 'Cant Cursos'
+FROM estudiante e JOIN inscripcion i ON e.legajo = i.ESTUDIANTE_legajo
+GROUP BY i.CURSO_codigo
+HAVING COUNT(i.CURSO_codigo) > 1;
+
+#Escriba una consulta que devuelva la información de los estudiantes que no realizan ningún curso.
+SELECT * FROM estudiante e 
+LEFT JOIN inscripcion i 
+ON e.legajo = i.ESTUDIANTE_legajo
+LEFT JOIN curso c
+ON c.codigo = i.CURSO_codigo
+GROUP BY e.legajo
+HAVING COUNT(c.codigo) < 1;
+
+#Escriba para cada tabla, los index (incluyendo su tipo) que tiene cada una.
+#Tabla CURSO: codigo (indice clousterizado), PROFESOR_ID (indice no clousterizado)
+#Tabla Profesor: id (indice clousterizado)
+#Tabla Estudiante: legajo (indice clousterizado)
+#Tabla Inscripcion: numero (indice clousterizado), CURSO_codigo (indice no clousterizado), ESTUDIANTE_legajo (indice no clousterizado)
+
+#Liste toda la información sobre los estudiantes que realizan cursos con los profesores de apellido “Pérez” y “Paz”.
+SELECT * FROM estudiante e
+JOIN inscripcion i
+ON e.legajo = i.ESTUDIANTE_legajo
+JOIN curso c
+ON c.codigo = i.CURSO_codigo
+JOIN profesor p
+ON c.PROFESOR_ID = p.id
+WHERE p.apellido = "Perez"
+OR p.apellido = "Paz";
